@@ -3,6 +3,7 @@ package zeus.quantm.a247news.network;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Xml;
@@ -15,24 +16,31 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+
 import java.util.List;
 
+
+import zeus.quantm.a247news.adapters.NewsAdapter;
 import zeus.quantm.a247news.models.New;
 
 /**
- * Created by thean on 3/21/2018.
+ * Created by thean on 3/14/2018.
  */
 
-public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
+public class XMLController extends AsyncTask<String, Void, ArrayList<New>> {
 
     ProgressDialog progressDialog;
     Context context;
     RecyclerView recyclerView;
+    NewsAdapter newsAdapter;
+    GridLayoutManager gridLayoutManager;
 
 
-    public XMLController(Context context, RecyclerView recyclerView) {
+    public XMLController(Context context, RecyclerView recyclerView, GridLayoutManager gridLayoutManager) {
         this.context = context;
         this.recyclerView = recyclerView;
+        this.gridLayoutManager = gridLayoutManager;
     }
 
     @Override
@@ -41,7 +49,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
         // Hiển thị Dialog khi bắt đầu xử lý.
         progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Thể Thao 24h");
+        progressDialog.setTitle("247News");
         progressDialog.setMessage("Dang xu ly...");
         progressDialog.show();
     }
@@ -52,9 +60,8 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
         List<New> mFeedModelList = null;
         String urlLink = strings[0];
         try {
-            if(!urlLink.startsWith("http://") && !urlLink.startsWith("https://"))
+            if (!urlLink.startsWith("http://") && !urlLink.startsWith("https://"))
                 urlLink = "http://" + urlLink;
-
 
 
             URL url = new URL(urlLink);
@@ -64,7 +71,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream inputStream = connection.getInputStream();
                 mFeedModelList = parseFeed(inputStream);
-            }else {
+            } else {
                 // display error message
             }
 
@@ -89,14 +96,16 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
         if (listItem != null) {
 
-
-            for (New item : listItem
+            for (New n : listItem
                     ) {
-                Log.e("Test Clone", item + "");
+                Log.e("Loi", n.toString());
             }
-            //recyclerView.setAdapter();
+            XMLFavorite xmlFavorite = new XMLFavorite(context);
+            newsAdapter = new NewsAdapter(context, listItem, xmlFavorite.ReadXMLFavorite());
+            recyclerView.setAdapter(newsAdapter);
+            recyclerView.setLayoutManager(gridLayoutManager);
+
         }
-        //textView.setText(aString);
     }
 
     public List<New> parseFeed(InputStream inputStream) throws XmlPullParserException,
@@ -119,17 +128,17 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
                 int eventType = xmlPullParser.getEventType();
 
                 String name = xmlPullParser.getName();
-                if(name == null)
+                if (name == null)
                     continue;
-                if(eventType == XmlPullParser.END_TAG) {
-                    if(name.equalsIgnoreCase("item")) {
+                if (eventType == XmlPullParser.END_TAG) {
+                    if (name.equalsIgnoreCase("item")) {
                         isItem = false;
                     }
                     continue;
                 }
 
                 if (eventType == XmlPullParser.START_TAG) {
-                    if(name.equalsIgnoreCase("item")) {
+                    if (name.equalsIgnoreCase("item")) {
                         isItem = true;
                         continue;
                     }
@@ -144,18 +153,21 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
                 if (name.equalsIgnoreCase("title")) {
                     title = result;
                 } else if (name.equalsIgnoreCase("link")) {
-                    link = result;
+                    if (!result.contains("rss")) {
+                        link = result;
+                    }
+
                 } else if (name.equalsIgnoreCase("description")) {
                     //  description = handleStringDescription(result);
                     description = handleStringDescription(result.toString());
                     image = hanleStringImage(result.toString());
-                } else if (name.equalsIgnoreCase("pubDate")){
+                } else if (name.equalsIgnoreCase("pubDate")) {
                     pubDate = result;
                 }
 
                 if (title != null && link != null && description != null && pubDate != null) {
-                    if(isItem) {
-                        New item = new New(title, link, description , pubDate, image);
+                    if (isItem) {
+                        New item = new New(title, link, description, pubDate, image);
                         items.add(item);
                     }
 
@@ -173,34 +185,54 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
         }
     }
 
-    private String handleStringDescription(String theStrDes){
+    private String handleStringDescription(String theStrDes) {
         int startString;
-        if(theStrDes.contains("</br>")){
+        if (theStrDes.contains("</br>")) {
             startString = theStrDes.lastIndexOf("</br>");
 
-            return theStrDes.substring(startString+5);
+            return theStrDes.substring(startString + 5);
         }
-        return  theStrDes;
+        return theStrDes;
     }
 
-    private String hanleStringImage(String theStrImage){
-        int startString;
-        int endString;
-        if(theStrImage.contains("<img")){
-            if(theStrImage.contains("data-original=")){
-                startString = theStrImage.lastIndexOf("data-original=");
+    private String hanleStringImage(String theStrImage) {
+        try {
+            int startString;
+            int endString;
+            if (theStrImage.contains("<img")) {
+                if (theStrImage.contains("data-original=")) {
+                    startString = theStrImage.lastIndexOf("data-original=");
 
-                endString = theStrImage.lastIndexOf(".jpg");
-                return theStrImage.substring(startString+15 , endString+4);
-            }else if(theStrImage.contains("src=")){
-                startString = theStrImage.lastIndexOf("src=");
+                    if (theStrImage.contains("png")) {
+                        endString = theStrImage.lastIndexOf(".png");
+                    } else {
+                        endString = theStrImage.lastIndexOf(".jpg");
+                    }
 
-                endString = theStrImage.lastIndexOf(".jpg");
+                    return theStrImage.substring(startString + 15, endString + 4);
+                } else if (theStrImage.contains("src=")) {
+                    startString = theStrImage.lastIndexOf("src=");
 
-                return theStrImage.substring(startString+4 , endString+4);
+                    if (theStrImage.contains("png")) {
+                        endString = theStrImage.lastIndexOf(".png");
+                    } else {
+                        endString = theStrImage.lastIndexOf(".jpg");
+                    }
+
+                    return theStrImage.substring(startString + 5, endString + 4);
+                }
             }
+            return theStrImage;
+        } catch (Exception e) {
+            return "";
         }
-        return theStrImage;
     }
 }
+
+
+
+
+
+
+
 

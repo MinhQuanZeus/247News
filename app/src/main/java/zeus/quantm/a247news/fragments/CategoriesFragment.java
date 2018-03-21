@@ -108,16 +108,17 @@ public class CategoriesFragment extends Fragment {
 
     private void setUpCategories(){
         this.categories = new ArrayList<>();
-        this.categories.add(new Category("Phap luat", "http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Suc khoe", "http://i.imgur.com/DvpvklR.png"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        this.categories.add(new Category("Phap luat", "https://http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
+
+        this.categories.add(new Category("Trang Chủ", "https://duyanhweb.com/wp-content/uploads/trang-chu-la-gi.jpg"));
+        this.categories.add(new Category("Thời Sự", "https://i.ytimg.com/vi/VD7kuSX_lXw/maxresdefault.jpg"));
+        this.categories.add(new Category("Kinh Doanh", "http://tslethamduong.com/public/files/editor/images/kd.jpg"));
+        this.categories.add(new Category("Giải Trí", "https://pbs.twimg.com/profile_images/777845924403949568/OvHMdybN_400x400.jpg"));
+        this.categories.add(new Category("Thể Thao", "http://review.siu.edu.vn/Upload/Siu17/top%205%20su%20kien%20the%20thao%20lon%20nhat%20hanh%20tinh%201.png"));
+        this.categories.add(new Category("Pháp Luật", "http://thcsdichvong.edu.vn/uploads/news/2018_01/phap-luat-2014-webmoi.jpg"));
+        this.categories.add(new Category("Giáo  Dục", "http://gddt.daklak.gov.vn/wp-content/uploads/Thumbcache/no-thumb-ne45vzwrrm6guvzoda1jh1ez0j6wbk6uu8to1f81v2.png"));
+        this.categories.add(new Category("Sức Khỏe", "http://xuatkhaulaodongs3.vn/wp-content/uploads/2015/06/dieu-kien-suc-khoe-di-xuat-khau-lao-dong-nhat-ban.jpg"));
+        this.categories.add(new Category("Gia Đình", "http://kivi.vn/upload_images/images/suc-khoe(1).jpg"));
+        this.categories.add(new Category("Cười", "http://thcs.daytot.vn/uploads/thcs/2016_11/chuyen-cuoi.jpg"));
     }
 
 

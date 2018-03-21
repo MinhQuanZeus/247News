@@ -14,13 +14,14 @@ import java.util.List;
 import zeus.quantm.a247news.R;
 import zeus.quantm.a247news.adapters.NewsAdapter;
 import zeus.quantm.a247news.models.New;
+import zeus.quantm.a247news.network.XMLFavorite;
 
 public class FavoritesActivity extends AppCompatActivity {
 
     private Toolbar toolbar;
     RecyclerView rvFavorites;
-    private List<New> favorites = new ArrayList<>();
     private NewsAdapter newsAdapter;
+    XMLFavorite xmlFavorite;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,28 +37,35 @@ public class FavoritesActivity extends AppCompatActivity {
         toolbar.setTitle("Yêu thích");
         rvFavorites = (RecyclerView) findViewById(R.id.rv_favorites);
 
-        favorites = new ArrayList<>();
-        favorites.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        favorites.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        favorites.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        favorites.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        favorites.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        favorites.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
+        xmlFavorite = new XMLFavorite(getApplicationContext());
+        setUpUI();
 
-        newsAdapter = new NewsAdapter(this, favorites);
-        GridLayoutManager gridLayoutManager = new GridLayoutManager(
-                this,
-                2,
-                LinearLayoutManager.VERTICAL,
-                false
-        );
-        gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
-            @Override
-            public int getSpanSize(int position) {
-                return (position % 3 == 0 ? 2 : 1);
-            }
-        });
-        rvFavorites.setAdapter(newsAdapter);
-        rvFavorites.setLayoutManager(gridLayoutManager);
+
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        setUpUI();
+    }
+
+    private void setUpUI(){
+        if(xmlFavorite.ReadXMLFavorite() != null){
+            newsAdapter = new NewsAdapter(this, xmlFavorite.ReadXMLFavorite() , xmlFavorite.ReadXMLFavorite() );
+            GridLayoutManager gridLayoutManager = new GridLayoutManager(
+                    this,
+                    2,
+                    LinearLayoutManager.VERTICAL,
+                    false
+            );
+            gridLayoutManager.setSpanSizeLookup(new GridLayoutManager.SpanSizeLookup() {
+                @Override
+                public int getSpanSize(int position) {
+                    return (position % 3 == 0 ? 2 : 1);
+                }
+            });
+            rvFavorites.setAdapter(newsAdapter);
+            rvFavorites.setLayoutManager(gridLayoutManager);
+        }
     }
 }

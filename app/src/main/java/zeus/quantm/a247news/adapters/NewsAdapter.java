@@ -20,17 +20,25 @@ import java.util.List;
 import zeus.quantm.a247news.R;
 import zeus.quantm.a247news.activities.ReaderActivity;
 import zeus.quantm.a247news.models.New;
+import zeus.quantm.a247news.network.XMLController;
+import zeus.quantm.a247news.network.XMLFavorite;
 
 /**
  * Created by QuanT on 3/21/2018.
  */
 
-public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem>{
+public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem> {
     private Context context;
     private List<New> news = new ArrayList<>();
-    public NewsAdapter(Context context, List<New> topSongModelList) {
+    private List<New> newsFavortite;
+    XMLFavorite xmlFavorite;
+
+    public NewsAdapter(Context context, List<New> topSongModelList, List<New> listFavor) {
         this.context = context;
         this.news = topSongModelList;
+        this.newsFavortite = listFavor;
+        xmlFavorite = new XMLFavorite(context);
+        newsFavortite = xmlFavorite.ReadXMLFavorite();
     }
 
     @Override
@@ -65,7 +73,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem
     }
 
 
-    public class ViewHolderItem extends RecyclerView.ViewHolder{
+    public class ViewHolderItem extends RecyclerView.ViewHolder {
 
         ImageView ivNew;
         ImageView ivBookmark;
@@ -84,18 +92,76 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem
             ivBookmark.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    Toast.makeText(context, "This is teh option help", Toast.LENGTH_LONG).show();
                     //TODO save bookmark
+                    try {
+                        if (newsFavortite == null) {
+                            newsFavortite = new ArrayList<>();
+                            ivBookmark.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
+                            newsFavortite.add((New) ivBookmark.getTag());
+                            Toast.makeText(context, "Bạn vừa lưu bài báo này vào tệp lưu", Toast.LENGTH_LONG).show();
+                            xmlFavorite.WriteXMLFavorite((ArrayList<New>) newsFavortite);
+                            return;
+                        }
+
+
+                        boolean isExist = false;
+                        int i = 0;
+
+                        for (New n : newsFavortite
+                                ) {
+                            if (n.title.compareToIgnoreCase(((New) ivBookmark.getTag()).title) == 0) {
+                                isExist = true;
+                                break;
+                            }
+                            i++;
+                        }
+
+                        if (isExist) {
+                            ivBookmark.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bookmark_border_black_24dp));
+                            newsFavortite.remove(i);
+                            Toast.makeText(context, "Bạn vừa xóa bài báo này khỏi tệp lưu", Toast.LENGTH_LONG).show();
+                            xmlFavorite.WriteXMLFavorite((ArrayList<New>) newsFavortite);
+                        } else {
+                            ivBookmark.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_bookmark_black_24dp));
+                            newsFavortite.add((New) ivBookmark.getTag());
+                            xmlFavorite.WriteXMLFavorite((ArrayList<New>) newsFavortite);
+                            Toast.makeText(context, "Bạn vừa lưu bài báo này vào tệp lưu", Toast.LENGTH_LONG).show();
+                        }
+
+                    } catch (Exception e) {
+                        Log.e("Loi", e.toString());
+                    }
+
                 }
             });
             view = itemView;
         }
 
-        public void setData(New newModel){
-            Picasso.get().load(newModel.image).into(ivNew);
+        public void setData(New newModel) {
+            if (!newModel.image.isEmpty()) {
+                Picasso.get().load(newModel.image).into(ivNew);
+            }
             tvTitle.setText(newModel.title);
             tvDescription.setText(newModel.description);
             tvTime.setText(newModel.pubDate);
+
+            setIvBookMark(ivBookmark, newsFavortite, newModel);
+
+        }
+
+        private void setIvBookMark(ImageView ivBookmark, List<New> listFov, New n) {
+            if (listFov != null) {
+                for (New n2 : listFov
+                        ) {
+                    if (n2.title.compareToIgnoreCase(n.title) == 0) {
+                        ivBookmark.setImageResource(R.drawable.ic_bookmark_black_24dp);
+                        ivBookmark.setTag(n);
+                        return;
+                    }
+                }
+            }
+            ivBookmark.setImageResource(R.drawable.ic_bookmark_border_black_24dp);
+            ivBookmark.setTag(n);
         }
     }
 }

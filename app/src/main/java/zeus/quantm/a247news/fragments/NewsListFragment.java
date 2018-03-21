@@ -17,6 +17,7 @@ import java.util.List;
 import zeus.quantm.a247news.R;
 import zeus.quantm.a247news.adapters.NewsAdapter;
 import zeus.quantm.a247news.models.New;
+import zeus.quantm.a247news.network.XMLController;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -37,14 +38,25 @@ public class NewsListFragment extends Fragment{
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_news_list, container, false);
         rvNews = (RecyclerView) view.findViewById(R.id.rv_news);
-        newList = new ArrayList<>();
-        newList.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        newList.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        newList.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        newList.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        newList.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        newList.add(new New("Hello", "https://www.google.com.vn/?gfe_rd=cr&dcr=0&ei=RneyWq_aAYGihwOKq6P4AQ","1111111111111111","","http://hotroontap.com/wp-content/uploads/2015/09/blog11.jpg"));
-        newsAdapter = new NewsAdapter(getContext(), newList);
+
+        setnewList(categoryId, rvNews);
+
+        return view;
+    }
+
+    public NewsListFragment setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
+        return this;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        setnewList(categoryId, rvNews);
+    }
+
+    private void setnewList(int categoryId , RecyclerView rvNews){
+
         GridLayoutManager gridLayoutManager = new GridLayoutManager(
                 getContext(),
                 2,
@@ -57,14 +69,53 @@ public class NewsListFragment extends Fragment{
                 return (position % 3 == 0 ? 2 : 1);
             }
         });
-        rvNews.setAdapter(newsAdapter);
-        rvNews.setLayoutManager(gridLayoutManager);
-        return view;
-    }
+        switch (categoryId){
+            case 0:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                break;
+            }
+            case 1:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_thoisu));
+                break;
+            }
+            case 2:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_kinhdoanh));
+                break;
+            }
+            case 3:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_giaitri));
+                break;
+            }
+            case 4:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_thethao));
+                break;
+            }
+            case 5:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_phapluat));
+                break;
+            }
+            case 6:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_giaoduc));
+                break;
+            }
+            case 7:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_suckhoe));
+                break;
+            }
+            case 8:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_giadinh));
+                break;
+            }
+            case 9:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_cuoi));
+                break;
+            }
+            default:{
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                break;
 
-    public NewsListFragment setCategoryId(int categoryId) {
-        this.categoryId = categoryId;
-        return this;
+            }
+        }
     }
 
 }
