@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
 
@@ -27,14 +28,9 @@ import zeus.quantm.a247news.models.New;
 public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem>{
     private Context context;
     private List<New> news = new ArrayList<>();
-    private View.OnClickListener onClickListener;
     public NewsAdapter(Context context, List<New> topSongModelList) {
         this.context = context;
         this.news = topSongModelList;
-    }
-
-    public void setOnItemClick(View.OnClickListener onClickListener){
-        this.onClickListener = onClickListener;
     }
 
     @Override
@@ -72,6 +68,7 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem
     public class ViewHolderItem extends RecyclerView.ViewHolder{
 
         ImageView ivNew;
+        ImageView ivBookmark;
         TextView tvTitle;
         TextView tvDescription;
         TextView tvTime;
@@ -80,9 +77,17 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem
         public ViewHolderItem(View itemView) {
             super(itemView);
             ivNew = (ImageView) itemView.findViewById(R.id.iv_new);
+            ivBookmark = (ImageView) itemView.findViewById(R.id.iv_bookmark);
             tvTitle = (TextView) itemView.findViewById(R.id.tv_title);
             tvDescription = (TextView) itemView.findViewById(R.id.tv_description);
             tvTime = (TextView) itemView.findViewById(R.id.tv_time);
+            ivBookmark.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    Toast.makeText(context, "This is teh option help", Toast.LENGTH_LONG).show();
+                    //TODO save bookmark
+                }
+            });
             view = itemView;
         }
 

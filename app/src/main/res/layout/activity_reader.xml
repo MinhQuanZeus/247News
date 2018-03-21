@@ -11,6 +11,8 @@
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         app:layout_collapseMode="pin"
+        app:titleTextColor="@color/white"
+        app:subtitleTextColor="@color/secondary_text"
         app:popupTheme="@style/AppTheme.PopupOverlay" />
     <WebView
         android:layout_below="@+id/toolbar"
