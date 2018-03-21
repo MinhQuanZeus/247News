@@ -92,7 +92,9 @@ public class NewsAdapter extends RecyclerView.Adapter<NewsAdapter.ViewHolderItem
         }
 
         public void setData(New newModel){
-            Picasso.get().load(newModel.image).into(ivNew);
+            if(!newModel.image.isEmpty()){
+                Picasso.get().load(newModel.image).into(ivNew);
+            }
             tvTitle.setText(newModel.title);
             tvDescription.setText(newModel.description);
             tvTime.setText(newModel.pubDate);

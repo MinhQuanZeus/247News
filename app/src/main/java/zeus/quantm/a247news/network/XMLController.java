@@ -3,6 +3,7 @@ package zeus.quantm.a247news.network;
 import android.app.ProgressDialog;
 import android.content.Context;
 import android.os.AsyncTask;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.util.Xml;
@@ -15,12 +16,16 @@ import java.io.InputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+
+
 import java.util.List;
 
+
+import zeus.quantm.a247news.adapters.NewsAdapter;
 import zeus.quantm.a247news.models.New;
 
 /**
- * Created by thean on 3/21/2018.
+ * Created by thean on 3/14/2018.
  */
 
 public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
@@ -28,11 +33,14 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
     ProgressDialog progressDialog;
     Context context;
     RecyclerView recyclerView;
+    NewsAdapter newsAdapter;
+    GridLayoutManager gridLayoutManager;
 
 
-    public XMLController(Context context, RecyclerView recyclerView) {
+    public XMLController(Context context, RecyclerView recyclerView , GridLayoutManager gridLayoutManager) {
         this.context = context;
         this.recyclerView = recyclerView;
+        this.gridLayoutManager = gridLayoutManager;
     }
 
     @Override
@@ -63,7 +71,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream inputStream = connection.getInputStream();
-                mFeedModelList = parseFeed(inputStream);
+                mFeedModelList =  parseFeed(inputStream);
             }else {
                 // display error message
             }
@@ -89,11 +97,13 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
         if (listItem != null) {
 
-
-            for (New item : listItem
-                    ) {
-                Log.e("Test Clone", item + "");
+            for (New n:listItem
+                 ) {
+                Log.e("Loi", n.toString());
             }
+            newsAdapter = new NewsAdapter(context, listItem);
+            recyclerView.setAdapter(newsAdapter);
+            recyclerView.setLayoutManager(gridLayoutManager);
             //recyclerView.setAdapter();
         }
         //textView.setText(aString);
@@ -184,23 +194,34 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
     }
 
     private String hanleStringImage(String theStrImage){
-        int startString;
-        int endString;
-        if(theStrImage.contains("<img")){
-            if(theStrImage.contains("data-original=")){
-                startString = theStrImage.lastIndexOf("data-original=");
+        try {
+            int startString;
+            int endString;
+            if (theStrImage.contains("<img")) {
+                if (theStrImage.contains("data-original=")) {
+                    startString = theStrImage.lastIndexOf("data-original=");
 
-                endString = theStrImage.lastIndexOf(".jpg");
-                return theStrImage.substring(startString+15 , endString+4);
-            }else if(theStrImage.contains("src=")){
-                startString = theStrImage.lastIndexOf("src=");
+                    endString = theStrImage.lastIndexOf(".jpg");
+                    return theStrImage.substring(startString + 15, endString + 4);
+                } else if (theStrImage.contains("src=")) {
+                    startString = theStrImage.lastIndexOf("src=");
 
-                endString = theStrImage.lastIndexOf(".jpg");
+                    endString = theStrImage.lastIndexOf(".jpg");
 
-                return theStrImage.substring(startString+4 , endString+4);
+                    return theStrImage.substring(startString + 5, endString + 4);
+                }
             }
+            return theStrImage;
+        }catch (Exception e){
+            return  "";
         }
-        return theStrImage;
     }
 }
+
+
+
+
+
+
+
 

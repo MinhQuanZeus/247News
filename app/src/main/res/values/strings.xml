@@ -8,5 +8,17 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    <string name="url_trangchu">https://vnexpress.net/rss/tin-moi-nhat.rss</string>
+    <string name="url_thoisu">https://vnexpress.net/rss/thoi-su.rss</string>
+    <string name="url_kinhdoanh">https://vnexpress.net/rss/kinh-doanh.rss</string>
+    <string name="url_giaitri">https://vnexpress.net/rss/giai-tri.rss</string>
+    <string name="url_thethao">https://vnexpress.net/rss/the-thao.rss</string>
+    <string name="url_phapluat">https://vnexpress.net/rss/phap-luat.rss</string>
+    <string name="url_giaoduc">https://vnexpress.net/rss/giao-duc.rss</string>
+    <string name="url_suckhoe">https://vnexpress.net/rss/suc-khoe.rss</string>
+    <string name="url_giadinh">https://vnexpress.net/rss/gia-dinh.rss</string>
+    <string name="url_cuoi">https://vnexpress.net/rss/cuoi.rss</string>
     <string name="title_activity_favorites">FavoritesActivity</string>
 </resources>
