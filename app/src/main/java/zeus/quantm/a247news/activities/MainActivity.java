@@ -14,6 +14,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 
 import zeus.quantm.a247news.R;
+import zeus.quantm.a247news.activities.network.XMLController;
 
 public class MainActivity extends AppCompatActivity
         implements NavigationView.OnNavigationItemSelectedListener {
@@ -22,6 +23,7 @@ public class MainActivity extends AppCompatActivity
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+       // new XMLController(this, null).execute("https://vnexpress.net/rss/the-thao.rss");
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
