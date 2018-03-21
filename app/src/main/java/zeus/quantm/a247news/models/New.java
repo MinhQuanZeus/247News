@@ -1,7 +1,9 @@
-package zeus.quantm.a247news.activities.models;
+package zeus.quantm.a247news.models;
 
 
-public class RssFeedModel {
+import java.io.Serializable;
+
+public class New implements Serializable{
 
     public String title;
     public String link;
@@ -9,7 +11,7 @@ public class RssFeedModel {
     public String pubDate;
     public String image;
 
-    public RssFeedModel(String title, String link, String description, String pubDate, String image) {
+    public New(String title, String link, String description, String pubDate, String image) {
         this.title = title;
         this.link = link;
         this.description = description;
@@ -19,7 +21,7 @@ public class RssFeedModel {
 
     @Override
     public String toString() {
-        return "RssFeedModel{" +
+        return "New{" +
                 "title='" + title + '\'' +
                 ", link='" + link + '\'' +
                 ", description='" + description + '\'' +

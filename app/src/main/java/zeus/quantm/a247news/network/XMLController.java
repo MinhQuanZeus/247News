@@ -1,4 +1,4 @@
-package zeus.quantm.a247news.activities.network;
+package zeus.quantm.a247news.network;
 
 import android.app.ProgressDialog;
 import android.content.Context;
@@ -17,13 +17,13 @@ import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
-import zeus.quantm.a247news.activities.models.RssFeedModel;
+import zeus.quantm.a247news.models.New;
 
 /**
  * Created by thean on 3/21/2018.
  */
 
-public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel> > {
+public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
     ProgressDialog progressDialog;
     Context context;
@@ -47,9 +47,9 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel
     }
 
     @Override
-    protected ArrayList<RssFeedModel> doInBackground(String... strings) {
+    protected ArrayList<New> doInBackground(String... strings) {
 
-        List<RssFeedModel> mFeedModelList = null;
+        List<New> mFeedModelList = null;
         String urlLink = strings[0];
         try {
             if(!urlLink.startsWith("http://") && !urlLink.startsWith("https://"))
@@ -75,13 +75,13 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel
             Log.e("RssFeed", "Error", e);
         }
 
-        return (ArrayList<RssFeedModel>) mFeedModelList;
+        return (ArrayList<New>) mFeedModelList;
 
     }
 
 
     @Override
-    protected void onPostExecute(ArrayList<RssFeedModel> listItem) {
+    protected void onPostExecute(ArrayList<New> listItem) {
         super.onPostExecute(listItem);
         // Hủy dialog đi.
         progressDialog.dismiss();
@@ -90,7 +90,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel
         if (listItem != null) {
 
 
-            for (RssFeedModel item : listItem
+            for (New item : listItem
                     ) {
                 Log.e("Test Clone", item + "");
             }
@@ -99,7 +99,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel
         //textView.setText(aString);
     }
 
-    public List<RssFeedModel> parseFeed(InputStream inputStream) throws XmlPullParserException,
+    public List<New> parseFeed(InputStream inputStream) throws XmlPullParserException,
             IOException {
         String title = null;
         String link = null;
@@ -107,7 +107,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel
         String pubDate = null;
         String image = null;
         boolean isItem = false;
-        List<RssFeedModel> items = new ArrayList<>();
+        List<New> items = new ArrayList<>();
 
         try {
             XmlPullParser xmlPullParser = Xml.newPullParser();
@@ -155,7 +155,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<RssFeedModel
 
                 if (title != null && link != null && description != null && pubDate != null) {
                     if(isItem) {
-                        RssFeedModel item = new RssFeedModel(title, link, description , pubDate, image);
+                        New item = new New(title, link, description , pubDate, image);
                         items.add(item);
                     }
 
