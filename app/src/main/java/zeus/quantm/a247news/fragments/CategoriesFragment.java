@@ -1,7 +1,10 @@
 package zeus.quantm.a247news.fragments;
 
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -23,6 +26,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import zeus.quantm.a247news.R;
+import zeus.quantm.a247news.activities.FavoritesActivity;
 import zeus.quantm.a247news.models.Category;
 
 /**
@@ -62,6 +66,16 @@ public class CategoriesFragment extends Fragment {
         drawer.addDrawerListener(toggle);
         toggle.syncState();
 
+        FloatingActionButton fab = (FloatingActionButton) view.findViewById(R.id.fab);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(getActivity(), FavoritesActivity.class);
+                getActivity().startActivity(intent);
+            }
+        });
+
+
         viewPager = (ViewPager) view.findViewById(R.id.viewpager);
         setupViewPager(viewPager);
         viewPager.setCurrentItem(this.categoryId);
@@ -71,7 +85,6 @@ public class CategoriesFragment extends Fragment {
         tabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
             @Override
             public void onTabSelected(TabLayout.Tab tab) {
-                Log.d("main", tab.getPosition()+"");
                 setCategoryImage(tab.getPosition());
             }
 
