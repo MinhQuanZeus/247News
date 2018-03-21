@@ -49,6 +49,12 @@ public class NewsListFragment extends Fragment{
         return this;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+        setnewList(categoryId, rvNews);
+    }
+
     private void setnewList(int categoryId , RecyclerView rvNews){
 
         GridLayoutManager gridLayoutManager = new GridLayoutManager(
@@ -69,39 +75,39 @@ public class NewsListFragment extends Fragment{
                 break;
             }
             case 1:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_thoisu));
                 break;
             }
             case 2:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_kinhdoanh));
                 break;
             }
             case 3:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_giaitri));
                 break;
             }
             case 4:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_thethao));
                 break;
             }
             case 5:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_phapluat));
                 break;
             }
             case 6:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_giaoduc));
                 break;
             }
             case 7:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_suckhoe));
                 break;
             }
             case 8:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_giadinh));
                 break;
             }
             case 9:{
-                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_trangchu));
+                new XMLController(getContext(), rvNews , gridLayoutManager).execute(getResources().getString(R.string.url_cuoi));
                 break;
             }
             default:{

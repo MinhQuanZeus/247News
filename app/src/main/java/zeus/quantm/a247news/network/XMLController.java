@@ -28,7 +28,7 @@ import zeus.quantm.a247news.models.New;
  * Created by thean on 3/14/2018.
  */
 
-public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
+public class XMLController extends AsyncTask<String, Void, ArrayList<New>> {
 
     ProgressDialog progressDialog;
     Context context;
@@ -37,7 +37,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
     GridLayoutManager gridLayoutManager;
 
 
-    public XMLController(Context context, RecyclerView recyclerView , GridLayoutManager gridLayoutManager) {
+    public XMLController(Context context, RecyclerView recyclerView, GridLayoutManager gridLayoutManager) {
         this.context = context;
         this.recyclerView = recyclerView;
         this.gridLayoutManager = gridLayoutManager;
@@ -49,7 +49,7 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
         // Hiển thị Dialog khi bắt đầu xử lý.
         progressDialog = new ProgressDialog(context);
-        progressDialog.setTitle("Thể Thao 24h");
+        progressDialog.setTitle("247News");
         progressDialog.setMessage("Dang xu ly...");
         progressDialog.show();
     }
@@ -60,9 +60,8 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
         List<New> mFeedModelList = null;
         String urlLink = strings[0];
         try {
-            if(!urlLink.startsWith("http://") && !urlLink.startsWith("https://"))
+            if (!urlLink.startsWith("http://") && !urlLink.startsWith("https://"))
                 urlLink = "http://" + urlLink;
-
 
 
             URL url = new URL(urlLink);
@@ -71,8 +70,8 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
             if (connection.getResponseCode() == HttpURLConnection.HTTP_OK) {
                 InputStream inputStream = connection.getInputStream();
-                mFeedModelList =  parseFeed(inputStream);
-            }else {
+                mFeedModelList = parseFeed(inputStream);
+            } else {
                 // display error message
             }
 
@@ -97,16 +96,16 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
 
         if (listItem != null) {
 
-            for (New n:listItem
-                 ) {
+            for (New n : listItem
+                    ) {
                 Log.e("Loi", n.toString());
             }
-            newsAdapter = new NewsAdapter(context, listItem);
+            XMLFavorite xmlFavorite = new XMLFavorite(context);
+            newsAdapter = new NewsAdapter(context, listItem, xmlFavorite.ReadXMLFavorite());
             recyclerView.setAdapter(newsAdapter);
             recyclerView.setLayoutManager(gridLayoutManager);
-            //recyclerView.setAdapter();
+
         }
-        //textView.setText(aString);
     }
 
     public List<New> parseFeed(InputStream inputStream) throws XmlPullParserException,
@@ -129,17 +128,17 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
                 int eventType = xmlPullParser.getEventType();
 
                 String name = xmlPullParser.getName();
-                if(name == null)
+                if (name == null)
                     continue;
-                if(eventType == XmlPullParser.END_TAG) {
-                    if(name.equalsIgnoreCase("item")) {
+                if (eventType == XmlPullParser.END_TAG) {
+                    if (name.equalsIgnoreCase("item")) {
                         isItem = false;
                     }
                     continue;
                 }
 
                 if (eventType == XmlPullParser.START_TAG) {
-                    if(name.equalsIgnoreCase("item")) {
+                    if (name.equalsIgnoreCase("item")) {
                         isItem = true;
                         continue;
                     }
@@ -154,18 +153,21 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
                 if (name.equalsIgnoreCase("title")) {
                     title = result;
                 } else if (name.equalsIgnoreCase("link")) {
-                    link = result;
+                    if (!result.contains("rss")) {
+                        link = result;
+                    }
+
                 } else if (name.equalsIgnoreCase("description")) {
                     //  description = handleStringDescription(result);
                     description = handleStringDescription(result.toString());
                     image = hanleStringImage(result.toString());
-                } else if (name.equalsIgnoreCase("pubDate")){
+                } else if (name.equalsIgnoreCase("pubDate")) {
                     pubDate = result;
                 }
 
                 if (title != null && link != null && description != null && pubDate != null) {
-                    if(isItem) {
-                        New item = new New(title, link, description , pubDate, image);
+                    if (isItem) {
+                        New item = new New(title, link, description, pubDate, image);
                         items.add(item);
                     }
 
@@ -183,17 +185,17 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
         }
     }
 
-    private String handleStringDescription(String theStrDes){
+    private String handleStringDescription(String theStrDes) {
         int startString;
-        if(theStrDes.contains("</br>")){
+        if (theStrDes.contains("</br>")) {
             startString = theStrDes.lastIndexOf("</br>");
 
-            return theStrDes.substring(startString+5);
+            return theStrDes.substring(startString + 5);
         }
-        return  theStrDes;
+        return theStrDes;
     }
 
-    private String hanleStringImage(String theStrImage){
+    private String hanleStringImage(String theStrImage) {
         try {
             int startString;
             int endString;
@@ -201,19 +203,28 @@ public class XMLController extends AsyncTask<String,Void, ArrayList<New> > {
                 if (theStrImage.contains("data-original=")) {
                     startString = theStrImage.lastIndexOf("data-original=");
 
-                    endString = theStrImage.lastIndexOf(".jpg");
+                    if (theStrImage.contains("png")) {
+                        endString = theStrImage.lastIndexOf(".png");
+                    } else {
+                        endString = theStrImage.lastIndexOf(".jpg");
+                    }
+
                     return theStrImage.substring(startString + 15, endString + 4);
                 } else if (theStrImage.contains("src=")) {
                     startString = theStrImage.lastIndexOf("src=");
 
-                    endString = theStrImage.lastIndexOf(".jpg");
+                    if (theStrImage.contains("png")) {
+                        endString = theStrImage.lastIndexOf(".png");
+                    } else {
+                        endString = theStrImage.lastIndexOf(".jpg");
+                    }
 
                     return theStrImage.substring(startString + 5, endString + 4);
                 }
             }
             return theStrImage;
-        }catch (Exception e){
-            return  "";
+        } catch (Exception e) {
+            return "";
         }
     }
 }
